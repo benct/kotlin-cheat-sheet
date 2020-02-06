@@ -1,37 +1,53 @@
-## Welcome to GitHub Pages
+# Kotlin Cheat Sheet
 
-You can use the [editor on GitHub](https://github.com/benct/kotlin-cheat-sheet/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Table of Contents
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- [Collections](#collections)
 
-### Markdown
+### Collections
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+#### Arrays
+```kotlin
+val intArray: Array<Int> = arrayOf(1, 2, 3)
+val primitiveIntArray: IntArray = intArrayOf(1, 2, 3)
+val primitiveDoubleArray: DoubleArray = doubleArrayOf(1, 2, 3)
+val primitiveLongArray: LongArray = longArrayOf(1, 2, 3)
+val primitiveFloatArray: FloatArray = floatArrayOf(1, 2, 3)
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+val copyOfArray: Array<Int> = arrayOf(1, 2, 3).copyOf()
+val partialCopyOfArray: Array<Int> = arrayOf(1, 2, 3).copyOfRange(0, 2)
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+#### Lists
+```kotlin
+val intList: List<Int> = listOf(1, 2, 3)
+val arrayList: List<Int> = arrayListOf(1, 2, 3)
+val emptyList: List<Int> = emptyList()
 
-### Jekyll Themes
+val listOfNotNull: List<Int> = listOfNotNull(1, null, 3)
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/benct/kotlin-cheat-sheet/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+#### Sets
+```kotlin
+val set: Set<Int> = setOf(1, 2, 3)
+val hashSet: Set<Int> = hashSetOf(1, 2, 3)
+val linkedSet: Set<Int> = linkedSetOf(1, 2, 3)
 
-### Support or Contact
+val emptySet: Set<Int> = emptySet()
+```
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+#### Maps
+```kotlin
+val map: Map<String, Int> = mapOf("foo" to 1, "bar" to 2)
+val map: Map<String, Int> = hashMapOf("foo" to 1, "bar" to 2)
+val map: Map<String, Int> = linkedMapOf("foo" to 1, "bar" to 2)
+
+val emptyMap: Map<St­ring, Int> = emptyMap()
+```
+
+#### Mutability
+```kotlin
+val mutableList: MutableList<Int> = mutableListOf(1, 2, 3)
+val mutableSet: MutableSet<Int> = mutableSetOf(1)
+var mutableMap: MutableMap<String, Int> = mutableMapOf("foo" to 1, "bar" to 2)
+```
