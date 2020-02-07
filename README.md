@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Collections](#collections)
+- [Transformers](#transformers)
 
 ## Collections
 
@@ -42,7 +43,7 @@ val map: Map<String, Int> = mapOf("foo" to 1, "bar" to 2)
 val hashMap: Map<String, Int> = hashMapOf("foo" to 1, "bar" to 2)
 val linkedMap: Map<String, Int> = linkedMapOf("foo" to 1, "bar" to 2)
 
-val emptyMap: Map<St­ring, Int> = emptyMap()
+val emptyMap: Map<String, Int> = emptyMap()
 ```
 
 #### Mutability
@@ -57,7 +58,9 @@ var mutableMap: MutableMap<String, Int> = mutableMapOf("foo" to 1, "bar" to 2)
 #### Associate
 Returns a map containing key-value pairs created by lambda.
 ```kotlin
-listOf(1, 2, 3).associate { it to "number$it" }   // {1=number1, 2=number2, 3=number3}
+listOf(1, 2, 3).associate { "key$it" to "val$it" }   // {key1=val1, key2=val2, key3=val3}
+listOf(1, 2, 3).associateWith { "val$it" }   // {1=val1, 2=val2, 3=val3}
+listOf(1, 2, 3).associateBy { "key$it" }   // {key1=1, key2=2, key3=3}
 ```
 
 #### Map
@@ -87,7 +90,7 @@ Sorts collection ascending (default) or descending, based on what lambda returns
 listOf(2, 1, 3).sorted()   // [1, 2, 3]
 listOf(2, 1, 3).sorted { it }   // [1, 2, 3]
 listOf(2, 1, 3).sortedByDescending()   // [3, 2, 1]
-listOf(2, 1, 3).sortedWith(Comparator<Int> { x, y -> y - x }   // [1, 2, 3]
+listOf(2, 1, 3).sortedWith(Comparator<Int> { x, y -> y - x })   // [1, 2, 3]
 ```
 
 #### Flattening
@@ -101,6 +104,6 @@ listOf(listOf(1, 2), listOf(3)).flatMap { iterable -> iterable.map { it + 1 } } 
 #### Other
 ```kotlin
 listOf(1, 2, 3).reversed()   // [3, 2, 1]
-listOf(1, 2, 3).partition { it > 2 })   // Pair([3], [1,2])
+listOf(1, 2, 3).partition { it > 2 }   // Pair([3], [1,2])
 listOf(1, 2, 3).slice(1..2)   // [2, 3]
 ```
