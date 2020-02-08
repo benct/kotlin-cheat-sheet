@@ -2,8 +2,25 @@
 
 ## Table of Contents
 
-- [Collections](#collections)
-- [Transformers](#transformers)
+1. [Collections](#collections)
+    1. [Arrays](#arrays)
+    1. [Lists](#lists)
+    1. [Sets](#sets)
+    1. [Maps](#maps)
+    1. [Mutability](#mutability)
+1. [Transformers](#transformers)
+    1. [Associate](#associate)
+    1. [Map](#map)
+    1. [MapKeys](#mapkeys)
+    1. [MapValues](#mapvalues)
+    1. [Sorting](#sorting)
+    1. [Flattening](#flattening)
+1. [Aggregators](#aggregators)
+    1. [Fold](#fold)
+    1. [Reduce](#reduce)
+    1. [Grouping](#grouping)
+    1. [Chunked](#chunked)
+
 
 ## Collections
 
@@ -55,6 +72,12 @@ var mutableMap: MutableMap<String, Int> = mutableMapOf("foo" to 1, "bar" to 2)
 
 ## Transformers
 
+```kotlin
+listOf(1, 2, 3).reversed()   // [3, 2, 1]
+listOf(1, 2, 3).partition { it > 2 }   // Pair([3], [1,2])
+listOf(1, 2, 3).slice(1..2)   // [2, 3]
+```
+
 #### Associate
 Returns a map containing key-value pairs created by lambda.
 ```kotlin
@@ -90,7 +113,7 @@ Sorts collection ascending (default) or descending, based on what lambda returns
 listOf(2, 1, 3).sorted()   // [1, 2, 3]
 listOf(2, 1, 3).sorted { it }   // [1, 2, 3]
 listOf(2, 1, 3).sortedByDescending()   // [3, 2, 1]
-listOf(2, 1, 3).sortedWith(Comparator<Int> { x, y -> y - x })   // [1, 2, 3]
+listOf(2, 1, 3).sortedWith(Comparator { x, y -> x - y })   // [1, 2, 3]
 ```
 
 #### Flattening
@@ -101,9 +124,65 @@ listOf(listOf(1, 2), listOf(3)).flatMap { it }   // [1, 2, 3]
 listOf(listOf(1, 2), listOf(3)).flatMap { iterable -> iterable.map { it + 1 } }   // [2, 3, 4]
 ```
 
-#### Other
+## Aggregators
+
 ```kotlin
-listOf(1, 2, 3).reversed()   // [3, 2, 1]
-listOf(1, 2, 3).partition { it > 2 }   // Pair([3], [1,2])
-listOf(1, 2, 3).slice(1..2)   // [2, 3]
+listOf(1, 2, 3).count()   // 3
+listOf(1, 2, 3).count { it == 3 }  // 1
+
+listOf(1, 2, 3).average()   // 2.0
+
+listOf(1, 2, 3).max()   // 3
+listOf(1, 2, 3).maxBy { it * 5 }   // 3
+
+listOf(1, 2, 3).min()   // 1
+listOf(1, 2, 3).minBy { it * 5 }   // 1
+
+listOf(1, 2, 3).sum()   // 6
+listOf(1, 2, 3).sumBy { if (it == 3) 6 else it }   // 9 (1+2+6)
+listOf(1, 2, 3).sumByDouble { it.toDouble() + 1.0 }   // 9 (2+3+4)
+```
+
+#### Fold
+Accumulates values starting with initial supplied value and applying operation from left to right (default) or right to left (foldRight).
+```kotlin
+listOf(1, 2, 3).fold(5) { accumulator, value -> accumulator + value }   // 11 (5+1+2+3)
+listOf(1, 2, 3).foldIndexed(5) { idx, accumulator, value ->
+   if (idx == 0) accumulator else accumulator + value   // 10 (5+2+3)
+}
+
+listOf(1, 2, 3).foldRight(5) { value, accumulator -> accumulator + value }   // 11 (5+3+2+1)
+listOf(1, 2, 3).foldRightIndexed(5) { idx, value, accumulator ->
+   if (idx == 0) accumulator else accumulator + value   // 8 (5+2+1)
+}
+```
+
+#### Reduce
+Accumulates values starting with first value and applying operation from left to right (default) or right to left (foldRight).
+```kotlin
+listOf(1, 2, 3).reduce { accumulator, value -> accumulator + value }   // 6 (1+2+3)
+listOf(1, 2, 3).reduceIndexed { idx, accumulator, value ->
+   if (idx == 0) accumulator else accumulator + value   // 5 (2+3)
+}
+
+listOf(1, 2, 3).reduceRight { value, accumulator -> accumulator + value }   // 6 (3+2+1)
+listOf(1, 2, 3).reduceRightIndexed { idx, value, accumulator ->
+   if (idx == 0) accumulator else accumulator + value   // 5 (3+2)
+}
+```
+
+#### Grouping
+Uses value returned from (first) lambda to group elements of the collection.
+```kotlin
+listOf(1, 2, 3).groupBy { "key" }   // {key=[1, 2, 3]}
+listOf(1, 2, 3).groupBy({ "key$it" }) { it + 1 }   // {key1=[2], key2=[3], key3=[4]}
+
+listOf(1, 2, 3).groupByTo(mutableMapOf(), { it }) { it + 10 }   // {1=[11], 2=[12], 3=[13]}
+```
+
+#### Chunked
+Splits this collection into a list of lists, each not exceeding the given size.
+```kotlin
+listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+    .chunked(3)   // [[one, two, three], [four, five, six], [seven, eight, nine], [ten]]
 ```
